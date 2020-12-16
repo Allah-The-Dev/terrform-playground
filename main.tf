@@ -1,25 +1,21 @@
 terraform {
   required_providers {
-    docker = {
-      source = "terraform-providers/docker"
+    google = {
+      source = "hashicorp/google"
+      version = "3.5.0"
     }
   }
 }
 
-provider "docker" {
-  host = "npipe:////.//pipe//docker_engine"
+provider "google" {
+
+  credentials = file("terraform-with-gcp-0c4c0742e5a0.json")
+
+  project = "terraform-with-gcp-298809"
+  region  = "us-central1"
+  zone    = "us-central1-c"
 }
 
-resource "docker_image" "nginx" {
-  name         = "nginx:latest"
-  keep_locally = false
-}
-
-resource "docker_container" "nginx" {
-  image = docker_image.nginx.latest
-  name  = "tutorial"
-  ports {
-    internal = 80
-    external = 8000
-  }
+resource "google_compute_network" "vpc_network" {
+  name = "terraform-network"
 }
